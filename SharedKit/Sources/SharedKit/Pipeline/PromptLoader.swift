@@ -2,11 +2,12 @@ import Foundation
 import Yams
 
 public enum PromptLoader {
-    public static func loadBuiltIns(bundle: Bundle = .module) -> [PromptTemplate] {
+    public static func loadBuiltIns(bundle: Bundle? = nil) -> [PromptTemplate] {
+        let resolved = bundle ?? .module
         let ids = PromptTemplate.BuiltInID.allCases.map(\.rawValue)
         return ids.compactMap { id in
-            guard let url = bundle.url(forResource: id, withExtension: "yaml", subdirectory: "Prompts")
-                ?? bundle.url(forResource: id, withExtension: "yaml") else {
+            guard let url = resolved.url(forResource: id, withExtension: "yaml", subdirectory: "Prompts")
+                ?? resolved.url(forResource: id, withExtension: "yaml") else {
                 return nil
             }
             return try? load(url: url)
